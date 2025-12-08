@@ -10,20 +10,21 @@
 </template>
 
 <script setup>
-import ExpensesTable from "./ExpensesTable.vue";
-import NewExpenseModal from "./NewExpenseModal.vue";
+import ExpensesTable from './ExpensesTable.vue'
+import NewExpenseModal from './NewExpenseModal.vue'
 </script>
 
 <style scoped>
 .container {
-  max-width: 100%;
+  max-width: 1600px;
   margin: 0 auto;
   padding: 30px;
+  min-height: 100vh;
 }
 
 h1 {
   font-size: 32px;
-  color: #333333;
+  color: #000000;
   margin-bottom: 30px;
 }
 

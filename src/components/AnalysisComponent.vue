@@ -11,15 +11,6 @@
         :end-date="formattedEndDate"
       />
     </div>
-    <div v-if="selectedStartDate" class="period-info">
-      <template v-if="isSingleDay">
-        {{ formattedStartDate }}
-      </template>
-      <template v-else>
-        {{ formattedStartDate }} — {{ formattedEndDate }}
-        <span class="days-count">({{ periodDays }} дней)</span>
-      </template>
-    </div>
     <div v-if="errorMessage" class="error-status">
       {{ errorMessage }}
     </div>
@@ -131,10 +122,9 @@ watch(
 }
 
 h1 {
-  font-size: 28px;
-  color: #2d3748;
+  font-size: 32px;
+  color: #000000;
   margin-bottom: 30px;
-  line-height: 1.3;
 }
 
 .content-wrapper {

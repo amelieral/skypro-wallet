@@ -1,8 +1,8 @@
 <template>
   <div class="chart-container">
     <div class="chart-title">
-      <h2>{{ periodLabel }}</h2>
-      <p>Общая сумма расходов: {{ formattedTotal }} ₽</p>
+      <h2>{{ formattedTotal }} ₽</h2>
+      <p>Расходы за {{ periodLabel }}</p>
     </div>
     <div class="chart">
       <canvas ref="chartCanvas"></canvas>
@@ -59,7 +59,7 @@ const formattedTotal = computed(() => {
 
 const periodLabel = computed(() => {
   if (props.startDate && props.endDate) return `${props.startDate} — ${props.endDate}`
-  return 'Не выбран период'
+  return 'период не выбран'
 })
 
 Chart.register(ChartDataLabels)
@@ -79,11 +79,11 @@ const initChart = () => {
         {
           label: 'Расходы по категориям',
           data: chartData.value,
-          backgroundColor: ['#6d28d9', '#f6c177', '#4ecdc4', '#ff6b6b', '#457b9d', '#e17055'],
+          backgroundColor: ['#D9B6FF', '#FFB53D', '#6EE4FE', '#B0AEFF', '#FFB9B8', '#e17055'],
           borderColor: '#ffffff',
           borderWidth: 2,
           borderRadius: 8,
-          barPercentage: 0.7,
+          barPercentage: 1,
         },
       ],
     },
@@ -94,13 +94,14 @@ const initChart = () => {
         legend: { display: false },
         tooltip: { enabled: false },
         datalabels: {
+          color: '#000000', // ← ВОТ ЭТО и меняет цвет!
           anchor: 'end',
           align: 'top',
           formatter: (value) =>
             value > 0 ? new Intl.NumberFormat('ru-RU').format(value) + ' Р' : '',
           font: {
-            weight: 'bold',
-            size: 12,
+            weight: '600',
+            size: 16,
           },
         },
       },
@@ -113,7 +114,7 @@ const initChart = () => {
         x: {
           grid: { display: false },
           ticks: {
-            color: '#4a5568',
+            color: '#000000',
             font: { weight: '500' },
           },
         },
@@ -152,6 +153,7 @@ watch(
   box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
   padding: 20px;
   width: 100%;
+  height: 623.67px;
 }
 
 ::v-deep(.chartjs-datalabel) {
@@ -164,18 +166,19 @@ watch(
 }
 
 .chart-title h2 {
-  font-size: 20px;
-  color: #333333;
+  font-size: 24px;
+  font-weight: 700;
+  color: #000000;
   margin-bottom: 4px;
 }
 
 .chart-title p {
   font-size: 14px;
-  color: #4a5568;
+  color: #999999;
 }
 
 .chart {
-  height: 400px;
+  height: 480px;
   position: relative;
 }
 

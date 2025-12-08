@@ -96,7 +96,7 @@ const handleDeleteExpense = async (id) => {
   border-radius: 12px;
   border: 1px solid #e2e8f0;
   box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
-  padding: 20px;
+  padding: 24px;
   overflow-x: auto;
 }
 
@@ -113,9 +113,8 @@ const handleDeleteExpense = async (id) => {
   line-height: 1;
   letter-spacing: 0;
   margin-left: 15px;
-  margin-top: 32px;
   margin-bottom: 32px;
-  color: #333333;
+  color: #000000;
 }
 
 .table-container thead {

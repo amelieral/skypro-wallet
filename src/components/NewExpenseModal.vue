@@ -3,19 +3,22 @@
     <h2>Новый расход</h2>
     <form @submit.prevent="handleSubmit">
       <div class="form-group">
-        <label>Описание:</label>
+        <label>Описание <span v-if="errors.description" class="error-star">*</span></label>
         <input
           v-model="formData.description"
           type="text"
           placeholder="Введите описание"
           required
-          :class="{ invalid: errors.description }"
+          :class="{
+            invalid: errors.description,
+            valid: formData.description.trim().length > 0 && !errors.description,
+          }"
           @blur="validateField('description')"
         />
       </div>
 
       <div class="form-group">
-        <label>Категория:</label>
+        <label>Категория<span v-if="errors.description" class="error-star">*</span></label>
         <div class="category-grid">
           <div
             v-for="category in categories"
@@ -32,38 +35,46 @@
 
       <div class="form-row">
         <div class="form-group">
-          <label>Дата:</label>
+          <label>Дата<span v-if="errors.description" class="error-star">*</span></label>
           <input
             v-model="formData.date"
             type="date"
             required
-            :class="{ invalid: errors.date }"
+            placeholder="Введите дату"
+            class="date-input"
+            :class="{
+              invalid: errors.amount,
+              valid: formData.amount && !errors.amount,
+            }"
             @blur="validateField('date')"
           />
         </div>
 
         <div class="form-group">
-          <label>Сумма (₽):</label>
+          <label>Сумма<span v-if="errors.description" class="error-star">*</span></label>
           <input
             v-model.number="formData.amount"
             type="number"
             min="1"
-            placeholder="0"
+            placeholder="Введите сумму"
             required
-            :class="{ invalid: errors.amount }"
+            :class="{
+              invalid: errors.amount,
+              valid: formData.amount && !errors.amount,
+            }"
             @blur="validateField('amount')"
           />
         </div>
       </div>
 
       <p v-if="error" class="error">{{ error }}</p>
-      <button type="submit" class="submit-button">Добавить расход</button>
+      <button type="submit" class="submit-button" :disabled="isDisabled">Добавить новый расход</button>
     </form>
   </div>
 </template>
 
 <script setup>
-import { ref } from 'vue'
+import { ref, computed } from 'vue'
 import { expensesStore } from '@/store/expenses'
 import foodIcon from '@/assets/icon/food.svg'
 import carIcon from '@/assets/icon/car.svg'
@@ -104,6 +115,15 @@ const categoryMapping = {
   Образование: 'education',
   Другое: 'others',
 }
+
+const isDisabled = computed(() => {
+  return (
+    Object.values(errors.value).some((err) => err) ||
+    !formData.value.description.trim() ||
+    !formData.value.date ||
+    !formData.value.amount
+  )
+})
 
 const validateField = (field) => {
   switch (field) {
@@ -183,9 +203,10 @@ const resetForm = () => {
 
 .new-expense-modal h2 {
   font-size: 24px;
-  font-weight: 600;
+  font-weight: 700;
+
   margin-bottom: 24px;
-  color: #222222;
+  color: #000000;
 }
 
 .form-group {
@@ -195,8 +216,15 @@ const resetForm = () => {
 .form-group label {
   display: block;
   margin-bottom: 8px;
-  font-size: 14px;
-  color: #666666;
+  font-weight: 600;
+  font-size: 16px;
+  color: #000000;
+}
+
+.error-star {
+  color: #dc2626; /* красный */
+  margin-left: 3px;
+  font-weight: bold;
 }
 
 .form-group input {
@@ -210,6 +238,12 @@ const resetForm = () => {
   height: 48px;
 }
 
+.submit-button:disabled {
+  background: #999999;
+  cursor: not-allowed;
+  opacity: 0.8;
+}
+
 .form-group input:focus {
   border-color: #6366f1;
   outline: none;
@@ -218,8 +252,8 @@ const resetForm = () => {
 
 .form-group input.valid {
   background: #f3ebff;
-  border-color: #7334ea;
   box-shadow: 0 0 0 1px #7334ea;
+  border: 1px solid transparent;
 }
 
 .form-group input.valid:focus {

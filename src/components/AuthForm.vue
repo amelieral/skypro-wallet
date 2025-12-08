@@ -3,9 +3,30 @@
     <form @submit.prevent="handleSubmit">
       <h2>{{ isSignUp ? 'Регистрация' : 'Вход' }}</h2>
 
-      <input v-if="isSignUp" v-model="name" placeholder="Имя" required autocomplete="name" />
+      <input
+        v-if="isSignUp"
+        v-model="name"
+        placeholder="Имя"
+        required
+        autocomplete="name"
+        :class="{
+          invalid: errors.name,
+          filled: name.trim() && !errors.name,
+        }"
+        @blur="validateField('name')"
+      />
 
-      <input v-model="login" placeholder="Логин" required autocomplete="username" />
+      <input
+        v-model="login"
+        placeholder="Логин"
+        required
+        autocomplete="username"
+        :class="{
+          invalid: errors.login,
+          filled: login.trim() && !errors.login,
+        }"
+        @blur="validateField('login')"
+      />
 
       <input
         type="password"
@@ -13,18 +34,20 @@
         :placeholder="isSignUp ? 'Придумайте пароль' : 'Пароль'"
         required
         :autocomplete="isSignUp ? 'new-password' : 'current-password'"
+        :class="{
+          invalid: errors.password,
+          filled: password.trim() && !errors.password,
+        }"
+        @blur="validateField('password')"
       />
 
-      <button type="submit" :disabled="authStore.state.value.isLoading">
+      <button type="submit" :disabled="isDisabled">
         {{ isSignUp ? 'Зарегистрироваться' : 'Войти' }}
         <span v-if="authStore.state.value.isLoading">...</span>
       </button>
 
-      <div class="form-footer">
-        <p v-if="authStore.state.value.error" class="error">
-          {{ formattedError }}
-        </p>
-      </div>
+      <p v-if="formattedError" class="error" v-html="formattedError"></p>
+
       <div v-show="!isSignUp" class="modal__form-group">
         <p>Нужно зарегистрироваться?</p>
         <RouterLink to="/signup" class="modal__link" @click="resetForm">
@@ -41,23 +64,49 @@
 </template>
 
 <script setup>
+import { ref, computed } from 'vue'
 import { authStore } from '@/store/auth'
-import { computed, ref } from 'vue'
 import { useRouter } from 'vue-router'
 
 const router = useRouter()
 const props = defineProps({
-  isSignUp: {
-    type: Boolean,
-    required: true,
-  },
+  isSignUp: Boolean,
 })
 
 const name = ref('')
 const login = ref('')
 const password = ref('')
 
+const errors = ref({
+  name: false,
+  login: false,
+  password: false,
+})
+
+const validateField = (field) => {
+  switch (field) {
+    case 'name':
+      errors.value.name = props.isSignUp && !name.value.trim()
+      break
+    case 'login':
+      errors.value.login = !login.value.trim()
+      break
+    case 'password':
+      errors.value.password = !password.value || password.value.length < 4
+      break
+  }
+}
+
+const validateForm = () => {
+  validateField('name')
+  validateField('login')
+  validateField('password')
+  return !Object.values(errors.value).some(Boolean)
+}
+
 const handleSubmit = async () => {
+  if (!validateForm()) return
+
   try {
     const credentials = {
       login: login.value.trim(),
@@ -65,27 +114,17 @@ const handleSubmit = async () => {
       ...(props.isSignUp && { name: name.value.trim() }),
     }
 
-    try {
-      const { success } = props.isSignUp
-        ? await authStore.register(credentials)
-        : await authStore.login(credentials)
+    const { success } = props.isSignUp
+      ? await authStore.register(credentials)
+      : await authStore.login(credentials)
 
-      if (success) {
-        await new Promise((resolve) => setTimeout(resolve, 100))
-        router.push('/expenses')
-        resetForm()
-      }
-    } catch (error) {
-      authStore.state.value.error = {
-        messages: [error.message || 'Произошла ошибка'],
-      }
-      password.value = ''
+    if (success) {
+      router.push('/expenses')
+      resetForm()
     }
-  } catch (err) {
-    console.error('Ошибка при отправке:', err)
-    authStore.state.value.error = {
-      messages: ['Произошла ошибка при обработке запроса'],
-    }
+  } catch (error) {
+    authStore.state.value.error = { messages: [error.message || 'Произошла ошибка'] }
+    password.value = ''
   }
 }
 
@@ -93,18 +132,21 @@ const resetForm = () => {
   name.value = ''
   login.value = ''
   password.value = ''
+  errors.value = { name: false, login: false, password: false }
 }
 
 const formattedError = computed(() => {
   if (!authStore.state.value.error?.messages) return ''
+  return authStore.state.value.error.messages.join('<br>')
+})
 
-  return authStore.state.value.error.messages
-    .flatMap((msg) => {
-      if (typeof msg === 'string') return msg.split('\n')
-      return String(msg)
-    })
-    .filter((msg) => msg.trim())
-    .join('<br>')
+const isDisabled = computed(() => {
+  return (
+    Object.values(errors.value).some(Boolean) ||
+    !login.value.trim() ||
+    !password.value.trim() ||
+    (props.isSignUp && !name.value.trim())
+  )
 })
 </script>
 
@@ -148,9 +190,24 @@ button {
   box-sizing: border-box;
 }
 
+input.invalid {
+  border-color: #dc2626;
+  background: #fef2f2;
+}
+
+button:disabled {
+  background: #999;
+  cursor: not-allowed;
+  opacity: 0.8;
+}
+
 input:focus {
   outline: 2px solid #6a11cb;
   border-color: transparent;
+}
+
+input.filled {
+  background-color: #f3ebff;
 }
 
 button {
@@ -180,6 +237,7 @@ button[type='button']:hover {
 .error {
   color: red;
   margin: 10px 0;
+  text-align: center;
 }
 
 .logo img {

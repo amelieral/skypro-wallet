@@ -1,6 +1,6 @@
 <template>
   <div class="calendar-container">
-    <h2>Выбор периода</h2>
+    <h2>Период</h2>
     <div class="calendar-wrapper">
       <div class="calendar-header">
         <div
@@ -201,8 +201,8 @@ watch(
 }
 
 h2 {
-  font-size: 20px;
-  color: #333333;
+  font-size: 24px;
+  color: #000000;
   margin-bottom: 20px;
 }
 
@@ -216,7 +216,7 @@ h2 {
 .calendar-header {
   display: grid;
   grid-template-columns: repeat(7, 1fr);
-  background: #f8fafc;
+  background-color: white;
   padding: 10px 0;
   position: sticky;
   top: 0;
@@ -235,8 +235,9 @@ h2 {
 
 .month-header {
   padding: 16px 8px;
-  font-weight: 500;
-  color: #333333;
+  font-size: 16px;
+  font-weight: 600;
+  color: #000000;
   background: white;
   top: 40px;
   z-index: 1;
@@ -253,7 +254,7 @@ h2 {
 .day-header {
   text-align: center;
   font-size: 12px;
-  color: #4a5568;
+  color: #999999;
   padding: 8px;
   width: 36px;
   margin: 0 auto;
@@ -279,12 +280,12 @@ h2 {
 }
 
 .day-cell:hover:not(.empty) {
-  background: #f3f4f6;
+  background: #F1EBFD;
 }
 
 .day-cell.selected {
-  background: #6d28d9;
-  color: white;
+  background: #F1EBFD;
+  color: #7334EA;
   font-weight: 500;
   transform: scale(1.1);
   box-shadow: 0 2px 6px rgba(0, 0, 0, 0.15);
