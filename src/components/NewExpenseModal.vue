@@ -236,7 +236,7 @@ const resetForm = () => {
   transition: all 0.2s;
   box-sizing: border-box;
   height: 48px;
-    font-family: 'Montserrat', sans-serif;
+  font-family: 'Montserrat', sans-serif;
 }
 
 .submit-button:disabled {
