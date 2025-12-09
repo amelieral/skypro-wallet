@@ -174,6 +174,7 @@ form {
 form h2 {
   text-align: center;
   margin-bottom: 30px;
+  font-weight: 700;
   font-size: 24px;
   color: #333333;
 }
@@ -185,8 +186,10 @@ button {
   margin-bottom: 18px;
   border: 1px solid #ddd;
   border-radius: 8px;
-  font-size: 15px;
+  font-size: 12px;
   transition: all 0.3s ease;
+  font-weight: 400;
+  font-family: 'Montserrat', sans-serif;
   box-sizing: border-box;
 }
 
