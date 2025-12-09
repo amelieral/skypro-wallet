@@ -26,6 +26,7 @@ h1 {
   font-size: 32px;
   color: #000000;
   margin-bottom: 30px;
+  font-weight: 700;
 }
 
 .content-wrapper {

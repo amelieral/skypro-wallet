@@ -232,10 +232,11 @@ const resetForm = () => {
   padding: 12px 16px;
   border: 1px solid #e0e0e0;
   border-radius: 8px;
-  font-size: 16px;
+  font-size: 12px;
   transition: all 0.2s;
   box-sizing: border-box;
   height: 48px;
+    font-family: 'Montserrat', sans-serif;
 }
 
 .submit-button:disabled {
@@ -356,5 +357,6 @@ const resetForm = () => {
   transition: background 0.2s;
   height: 48px;
   box-sizing: border-box;
+  font-family: 'Montserrat', sans-serif;
 }
 </style>
